@@ -131,7 +131,7 @@ namespace QL_HS
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                options.RoutePrefix = "";
+                options.RoutePrefix = "swagger";
             });
             
         }
