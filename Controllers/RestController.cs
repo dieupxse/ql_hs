@@ -221,12 +221,14 @@ namespace QL_HS.Controllers
                 .Where(e => e.Date.DayOfYear == d.DayOfYear)
                 .OrderByDescending(e => e.Date)
                 .ToList();
-            var showPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-60)).ToList();
+            var newPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-1)).ToList();
+            var showPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-10) && !newPickup.Any(s => s.Id == e.Id)).ToList();
             return Ok(new {
                 date = d.ToString("dd-MM-yyyy"),
                 totalStudent,
                 pickedStudent = pickups.Count,
-                showPickup
+                showPickup,
+                newPickup
             });
         }
 

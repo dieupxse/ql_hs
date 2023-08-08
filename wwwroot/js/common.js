@@ -64,7 +64,15 @@ class Api {
             console.error('calling api error', e);
         }
         if (resp?.ok) {
-            return await resp.json();
+            try {
+                return await resp.json();
+            } catch (ex) { 
+                return {
+                    errorCode: resp.status,
+                    errorMessage: resp.text
+                }
+            }
+            
         } else {
             console.log(`HTTP Response Code: ${resp?.status}`)
             return null;
@@ -91,9 +99,19 @@ class App {
         return await this.api.get('rest/current-user-info');
     }
 
+    displayFormat(date) {
+        var day = date.getDay();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+        var dateString = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year} ${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min}:${sec < 10 ? '0' + sec : sec} `;
+        return dateString;
+    }
+
     async checkLogin() {
         var loginInfo = await app.getLoginInfo();
-        console.log(loginInfo);
         window.loginInfo = loginInfo;
         if (loginInfo == null && !this.isPage('dang-nhap.html')) {
             this.goTo('/dang-nhap.html');
@@ -109,7 +127,40 @@ class App {
                 }
             }
         }
+        $('body').removeClass('d-none');
         return loginInfo;
+    }
+
+    checkPageAllow(srole, trole) {
+        if (srole === trole) return;
+        switch (srole) {
+            case 'GUARDIAN':
+                this.goTo('don-hoc-sinh.html');
+                break;
+            case 'ADMIN':
+            case 'ROOT':
+                this.goTo('index.html');
+                break;
+            default:
+                this.goTo('dang-nhap.html');
+                break;
+        }
+    }
+
+    delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
     }
 }
 var app = new App('http://localhost:38379/api/');
+
+$(async function () {
+    $('#logoutBtn').click(async function (e) {
+        e.preventDefault();
+        localStorage.removeItem(app.api.tokenKey);
+        app.goTo('/dang-nhap.html');
+    });
+    setInterval(() => {
+        var dateString = app.displayFormat(new Date());
+        $('#current-date').text(dateString);
+    }, 1000);
+})
