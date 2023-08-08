@@ -13433,7 +13433,9 @@
       "Swashbuckle.AspNetCore >= 6.5.0",
       "Swashbuckle.AspNetCore.Swagger >= 6.5.0",
       "Swashbuckle.AspNetCore.SwaggerGen >= 6.5.0",
-      "Swashbuckle.AspNetCore.SwaggerUI >= 6.5.0"
+      "Swashbuckle.AspNetCore.SwaggerUI >= 6.5.0",
+      "System.Runtime.CompilerServices.Unsafe >= 4.6.0",
+      "System.Text.Encodings.Web >= 4.6.0"
     ]
   },
   "packageFolders": {
@@ -13529,6 +13531,14 @@
           "Swashbuckle.AspNetCore.SwaggerUI": {
             "target": "Package",
             "version": "[6.5.0, )"
+          },
+          "System.Runtime.CompilerServices.Unsafe": {
+            "target": "Package",
+            "version": "[4.6.0, )"
+          },
+          "System.Text.Encodings.Web": {
+            "target": "Package",
+            "version": "[4.6.0, )"
           }
         },
         "imports": [
