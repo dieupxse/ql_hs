@@ -132,7 +132,7 @@ class App {
     }
 
     checkPageAllow(srole, trole) {
-        if (srole === trole) return;
+        if (trole.includes(srole)) return;
         switch (srole) {
             case 'GUARDIAN':
                 this.goTo('don-hoc-sinh.html');

@@ -1,6 +1,6 @@
 ﻿$(async function() {
     let loginInfo = await app.checkLogin();
-    app.checkPageAllow(loginInfo?.data?.account?.role, 'ROOT');
+    app.checkPageAllow(loginInfo?.data?.account?.role, ['ROOT', 'ADMIN']);
     $('#accountName').text(`Xin chào, ${loginInfo?.data?.account?.username}`);
     var table = $('#table-picked-student');
     var ntable = $('#table-new-pick-student');
