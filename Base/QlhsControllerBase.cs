@@ -71,6 +71,7 @@ namespace QL_HS.Base
 
         public bool IsRoot => CurrentRole == UserRoles.ROLE_ROOT;
         public bool IsAdmin => CurrentRole == UserRoles.ROLE_ADMIN;
+        public bool IsMonitor => CurrentRole == UserRoles.ROLE_MONITOR;
         public bool IsAdminGroup => IsRoot || IsAdmin;
 
 

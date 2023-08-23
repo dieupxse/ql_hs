@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QL_HS.Database;
 
 namespace QL_HS.Migrations
 {
     [DbContext(typeof(QLHSDbContext))]
-    partial class QLHSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230823181519_AddPickupState")]
+    partial class AddPickupState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

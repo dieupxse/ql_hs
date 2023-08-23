@@ -121,7 +121,7 @@ class App {
                 if (loginInfo.data.account.role == 'GUARDIAN') {
                     this.goTo('don-hoc-sinh.html');
                     return;
-                } else if (['ADMIN', 'ROOT'].includes(loginInfo.data.account.role)) {
+                } else if (['ADMIN', 'ROOT', 'MONITOR'].includes(loginInfo.data.account.role)) {
                     this.goTo('index.html');
                     return;
                 }
@@ -139,6 +139,7 @@ class App {
                 break;
             case 'ADMIN':
             case 'ROOT':
+            case 'MONITOR':
                 this.goTo('index.html');
                 break;
             default:
@@ -151,7 +152,7 @@ class App {
         return new Promise(resolve => setTimeout(resolve, time));
     }
 }
-var app = new App('http://49.156.53.70:8888/api/');
+var app = new App('http://localhost:38379/api/');
 
 $(async function () {
     $('#logoutBtn').click(async function (e) {

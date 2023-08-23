@@ -14,7 +14,6 @@ namespace QL_HS.Database
         [Column(TypeName = "nvarchar(200)")]
         [JsonIgnore]
         public string? UpdatedBy { get; set; }
-        [JsonIgnore]
         public DateTime? UpdatedDate { get; set; }
         [JsonIgnore]
         public string Status { get; set; } = EntityStatus.ENABLE;

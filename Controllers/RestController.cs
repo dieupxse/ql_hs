@@ -28,7 +28,7 @@ namespace QL_HS.Controllers
         [HttpGet("current-user-info")]
         public async Task<IActionResult> CurrentUserInfo()
         {
-            if(IsAdminGroup)
+            if(IsAdminGroup || IsMonitor)
             {
                 return Ok(new { 
                     account = CurrentAccount
@@ -206,6 +206,28 @@ namespace QL_HS.Controllers
             return Ok();
         }
 
+        [HttpPost("pickup-confirm")]
+        public IActionResult PickupStudentConfirm([FromBody] PickupRequestModel model)
+        {
+            if (!ModelState.IsValid || model.GuardianId == 0 || model.StudentId == 0) return BadRequest();
+
+            var student = _db.Students.FirstOrDefault(e => e.Id == model.StudentId);
+            if (student == null) return BadRequest("Student not exist");
+            var guardian = _db.Guardians.FirstOrDefault(e => e.Id == model.GuardianId);
+            if (guardian == null) return BadRequest("Guardian not exist");
+
+            var pickup = _db.Pickups.FirstOrDefault(e=>e.StudentId == model.StudentId && e.GuardianId == model.GuardianId && e.Date.DayOfYear == DateTime.Now.DayOfYear);
+            
+            if (pickup != null)
+            {
+                pickup.State = "CONFIRM";
+                pickup.UpdatedDate = DateTime.Now;
+                _db.Pickups.Update(pickup);
+                _db.SaveChanges();
+            }
+            return Ok();
+        }
+
         [HttpGet("dashboard")]
         public async Task<IActionResult> Dashboard(string date = "")
         {
@@ -221,12 +243,12 @@ namespace QL_HS.Controllers
                 .Where(e => e.Date.DayOfYear == d.DayOfYear)
                 .OrderByDescending(e => e.Date)
                 .ToList();
-            var newPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-1)).ToList();
-            var showPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-10) && !newPickup.Any(s => s.Id == e.Id)).ToList();
+            var newPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-60) && e.State == "REQUEST").ToList();
+            var showPickup = pickups.Where(e => e.Date >= DateTime.Now.AddMinutes(-60)).ToList();
             return Ok(new {
                 date = d.ToString("dd-MM-yyyy"),
                 totalStudent,
-                pickedStudent = pickups.Count,
+                pickedStudent = pickups.Count(e=>e.State == "CONFIRM"),
                 showPickup,
                 newPickup
             });
