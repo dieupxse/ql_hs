@@ -152,7 +152,8 @@ class App {
         return new Promise(resolve => setTimeout(resolve, time));
     }
 }
-var app = new App('http://localhost:38379/api/');
+var app = new App('http://49.156.53.70:8888/api/'); //server
+//var app = new App('http://localhost:38379/api/'); //localhost
 
 $(async function () {
     $('#logoutBtn').click(async function (e) {
