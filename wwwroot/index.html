@@ -13,7 +13,7 @@
 <body class="d-none">
     <!--Menu-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="#">QLHS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,6 +22,9 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/index.html">Trang chủ</a>
+                    </li>
+                    <li class="nav-item manage-menu">
+                        <a class="nav-link" aria-current="page" href="/quan-ly.html">Quản lý</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -32,6 +35,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Cập nhật thông tin</a></li>
+                                <li><a class="dropdown-item manage-menu" href="/quan-ly.html">Quản lý</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="#" id="logoutBtn">Đăng xuất</a></li>
                             </ul>
@@ -43,7 +47,7 @@
     </nav>
 
     <!--Body-->
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="h3 mt-5">Đón học sinh ngày <span class="pickdate"></span></h1>
         <div class="mt-3" id="student-list">
             <table class="table">

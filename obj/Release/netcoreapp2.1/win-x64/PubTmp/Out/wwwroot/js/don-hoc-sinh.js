@@ -26,8 +26,19 @@
             stu.find('.student-name').text(e.student.name);
             stu.find('.student-class').text(e.student.class);
             stu.find('.student-grade').text(e.student.grade);
-            stu.find('.btn-pickup').attr('disabled', 'disabled');
-            stu.find('.btn-pickup').text(`Đã đón lúc ${app.displayFormat(new Date(e.date))}`);
+            if (e.state == 'CONFIRM') {
+                stu.find('.btn-pickup').attr('disabled', 'disabled');
+            }
+            if (e.state == 'CONFIRM') {
+                stu.find('.btn-pickup').text(`Đã đón lúc ${app.displayFormat(new Date(e.updatedDate || e.date))}`);
+            } else {
+                stu.find('.btn-pickup').attr('data-id', e.student.id);
+                stu.find('.btn-pickup').attr('data-gid', e.guardian.id);
+                stu.find('.btn-pickup').addClass('btn-confirm-pickup');
+                stu.find('.btn-pickup').text(`Xác nhận đã đón`);
+                stu.find('.btn-pickup').removeClass('btn-pickup');
+
+            }
             studentListPicked.append(stu);
         });
     } else {
@@ -43,10 +54,29 @@
             guardianId: guardianId
         });
         if (res && res?.errorCode == 200) {
-            alert('Đón học sinh thành công!');
+            alert('Đã gửi yêu cầu đón học sinh. Vui lòng đợi!');
             window.location.reload();
         } else {
             alert('Đã xảy ra lỗi');
         }
+    })
+
+    $('.btn-confirm-pickup').click(async function (e) {
+        e.preventDefault();
+        if (confirm('Xác nhận đón học sinh này?')) {
+            var studentId = $(this).attr('data-id');
+            var guardianId = $(this).attr('data-gid');
+            var res = await app.api.post('/rest/pickup-confirm', {
+                studentId: studentId,
+                guardianId: guardianId
+            });
+            if (res && res?.errorCode == 200) {
+                alert('Đón học sinh thành công!');
+                window.location.reload();
+            } else {
+                alert('Đã xảy ra lỗi');
+            }
+        }
+        
     })
 })

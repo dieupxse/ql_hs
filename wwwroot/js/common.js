@@ -87,8 +87,10 @@ class App {
     getLoginAccount() {
         return window.loginInfo?.data
     }
-    isPage (page) {
-        return window.location.href.toLowerCase().endsWith(page);
+    isPage(page) {
+        const currentUrl = window.location.href.toLowerCase();
+        console.log(currentUrl);
+        return currentUrl.endsWith(page);
     }
 
     goTo (url) {
@@ -118,13 +120,23 @@ class App {
             return;
         } else if (loginInfo != null) {
             if (this.isPage('dang-nhap.html')) {
-                if (loginInfo.data.account.role == 'GUARDIAN') {
+                if (['GUARDIAN'].includes(loginInfo.data.account.role)) {
                     this.goTo('don-hoc-sinh.html');
                     return;
-                } else if (['ADMIN', 'ROOT', 'MONITOR'].includes(loginInfo.data.account.role)) {
+                } else if (['MONITOR'].includes(loginInfo.data.account.role)) {
                     this.goTo('index.html');
                     return;
+                } else if (['ADMIN', 'ROOT'].includes(loginInfo.data.account.role)) {
+                    this.goTo('quan-ly.html');
+                    return;
                 }
+            }
+        }
+        if (loginInfo) {
+            if (['ROOT', 'ADMIN'].includes(loginInfo?.data?.account?.role)) {
+                $('.manage-menu').removeClass('d-none');
+            } else {
+                $('.manage-menu').addClass('d-none');
             }
         }
         $('body').removeClass('d-none');
@@ -137,10 +149,12 @@ class App {
             case 'GUARDIAN':
                 this.goTo('don-hoc-sinh.html');
                 break;
-            case 'ADMIN':
-            case 'ROOT':
             case 'MONITOR':
                 this.goTo('index.html');
+                break;
+            case 'ADMIN':
+            case 'ROOT':
+                this.goTo('quan-ly.html');
                 break;
             default:
                 this.goTo('dang-nhap.html');
@@ -151,6 +165,64 @@ class App {
     delay(time) {
         return new Promise(resolve => setTimeout(resolve, time));
     }
+
+    getPagination(current = 1, pageSize = 5, rowPerPage = 20, total, totalPage) {
+            // TODO Auto-generated method stub
+        var page = "";
+        var start = 0;
+        var pageNumber = 1;
+        var i = 1;
+        if (current == 0) current = 1;
+        page += '<nav aria-label="Page navigation">';
+        page += "<ul class=\"pagination\">";
+        page+= "<li class=\"page-item disabled\"><a class='page-link'>Từ " + ((current - 1) * rowPerPage + 1) + " đến " + ((current * rowPerPage) > total ? total : (current * rowPerPage)) + " trong tổng số " + total + "</a></li>";
+        if (totalPage > 1) {
+            if (current <= totalPage) {
+                if (current == 1) {
+                    pageNumber = pageSize;
+                    if (pageNumber > totalPage) pageNumber = totalPage;
+                    start = 1;
+                }
+                else {
+                    page += "<li class='page-item'><a href='#' class='page-link' data-page='1' id='page-1'>&laquo;&laquo;</a></li>";
+                    page += "<li class='page-item'><a href='#' class='page-link' data-page='" + (current - 1) + "' id=\"page-" + (current - 1) + "\">&laquo;</a></li>";
+                    if ((totalPage - current) < (pageSize / 2)) {
+                        start = (totalPage - pageSize) + 1;
+                        if (start <= 0) start = 1;
+                        pageNumber = totalPage;
+                    }
+                    else {
+                        start = current - (pageSize / 2);
+                        if (start <= 0) start = 1;
+                        pageNumber = current + (pageSize / 2);
+                        if (totalPage < pageNumber) {
+                            pageNumber = totalPage;
+                        }
+                        else if (pageNumber < pageSize) {
+                            pageNumber = pageSize;
+                        }
+                    }
+                }
+                i = start;
+                while (i <= pageNumber) {
+                    if (i == current) {
+                        page += "<li class=\"page-item active\"><a class='page-link' id=\"page-" + (i) + "\">" + i + "</a></li>";
+                    }
+                    else {
+                        page += "<li class='page-item'><a href='#' class='page-link' data-page='"+i+"' id=\"page-" + i + "\">" + i + "</a></li>";
+                    }
+                    i++;
+                }
+                if (current < totalPage) {
+                    page += "<li class='page-item'><a href='#' class='page-link' data-page='" + (current + 1) + "' id=\"page-" + (current + 1) + "\">&raquo;</a></li>";
+                    page += "<li class='page-item'><a href='#' class='page-link' data-page='" + (totalPage) + "' id=\"page-" + (totalPage) + "\">&raquo;&raquo;</a></li>";
+                }
+            }
+            page += "</ul></nav>";
+        }
+        return page;
+    }
+
 }
 var app = new App('http://49.156.53.70:8888/api/'); //server
 //var app = new App('http://localhost:38379/api/'); //localhost
